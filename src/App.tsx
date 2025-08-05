@@ -18,7 +18,7 @@ const ShiftScheduler = () => {
   const minutesToTime = (minutes) => {
     const hours = Math.floor(minutes / 60) % 24;
     const mins = minutes % 60;
-    return `${hours.toString()} שעות ${mins.toString()} דקות`;
+    return `${hours.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")} `;
   };
 
   // Round to nearest 5 minutes
@@ -130,7 +130,7 @@ const ShiftScheduler = () => {
               {shiftData.map((shift) => (
                 <tr key={shift.shiftNumber} className="hover:bg-gray-50">
                   <td className="border border-gray-300 px-4 py-2 font-medium">
-                    שמירה {shift.shiftNumber}
+                    {shift.shiftNumber}
                   </td>
                   <td className="border border-gray-300 px-4 py-2">{shift.startTime}</td>
                   <td className="border border-gray-300 px-4 py-2">{shift.endTime}</td>
@@ -319,7 +319,7 @@ const ShiftScheduler = () => {
               <div className="flex justify-between items-center mb-4">
                 <div>
                   <h3 className="text-xl font-semibold text-gray-800">
-                    {results.canDivideEqually ? strategy.name : `אפשרות ${index == 0 ? "א" : (index == 1 ? "ב" : "ג")}: ${strategy.name}`}
+                    {results.canDivideEqually ? strategy.name : `אפשרות ${index === 0 ? "א" : (index === 1 ? "ב" : "ג")}: ${strategy.name}`}
                   </h3>
                   <p className="text-gray-600 text-sm">{strategy.description}</p>
                   {strategy.adjustedStartTime && strategy.adjustedStartTime !== startTime && (
@@ -351,7 +351,7 @@ const ShiftScheduler = () => {
                       {strategy.shifts.map((shift) => (
                         <tr key={shift.shiftNumber} className="hover:bg-gray-50">
                           <td className="border border-gray-300 px-4 py-2 font-medium">
-                            שמירה {shift.shiftNumber}
+                            {shift.shiftNumber}
                           </td>
                           <td className="border border-gray-300 px-4 py-2">{shift.startTime}</td>
                           <td className="border border-gray-300 px-4 py-2">{shift.endTime}</td>

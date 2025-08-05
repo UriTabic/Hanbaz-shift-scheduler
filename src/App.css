@@ -88,7 +88,7 @@ table {
 th,
 td {
   direction: rtl;
-  text-align: right;
+  text-align: center;
   padding: 12px 16px;
   border: 1px solid #d1d5db;
   /* gray-300 */
