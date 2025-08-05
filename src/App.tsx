@@ -18,7 +18,7 @@ const ShiftScheduler = () => {
   const minutesToTime = (minutes) => {
     const hours = Math.floor(minutes / 60) % 24;
     const mins = minutes % 60;
-    return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+    return `${hours.toString()} שעות ${mins.toString()} דקות`;
   };
 
   // Round to nearest 5 minutes
@@ -65,7 +65,7 @@ const ShiftScheduler = () => {
         shiftNumber: index + 1,
         startTime: minutesToTime(shiftStart),
         endTime: minutesToTime(shiftEnd),
-        duration: `${Math.floor(duration / 60)}h ${duration % 60}m`
+        duration: `${Math.floor(duration / 60)} שעות ${String(duration % 60)} דקות`
       });
 
       currentStart += duration;
@@ -96,10 +96,10 @@ const ShiftScheduler = () => {
       <div>
         <div className="mb-4 p-3 bg-blue-50 rounded-lg">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Distribute {strategy.remainder} minutes between first and last shift (5-minute steps):
+            חלקו {strategy.remainder} דקות בין השמירה הראשונה והאחרונה (קפיצות של 5 דקות):
           </label>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600 min-w-fit">First: +{firstShiftExtra}min</span>
+            <span className="text-sm text-gray-600 min-w-fit">ראשון: +{firstShiftExtra} דקות</span>
             <input
               type="range"
               min="0"
@@ -109,10 +109,10 @@ const ShiftScheduler = () => {
               onChange={(e) => setFirstShiftExtra(parseInt(e.target.value))}
               className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
             />
-            <span className="text-sm text-gray-600 min-w-fit">Last: +{strategy.remainder - firstShiftExtra}min</span>
+            <span className="text-sm text-gray-600 min-w-fit">אחרון: +{strategy.remainder - firstShiftExtra} דקות</span>
           </div>
           <div className="text-center text-xs text-gray-500 mt-1">
-            Base shift: {Math.floor(strategy.baseShifts[0] / 60)}h {strategy.baseShifts[0] % 60}m + extra time
+            בסיס: {Math.floor(strategy.baseShifts[0] / 60)} שעות {String(strategy.baseShifts[0] % 60)} דקות + תוספת
           </div>
         </div>
 
@@ -120,17 +120,17 @@ const ShiftScheduler = () => {
           <table className="w-full border-collapse border border-gray-300">
             <thead>
               <tr className="bg-gray-100">
-                <th className="border border-gray-300 px-4 py-2 text-left">Shift #</th>
-                <th className="border border-gray-300 px-4 py-2 text-left">Start Time</th>
-                <th className="border border-gray-300 px-4 py-2 text-left">End Time</th>
-                <th className="border border-gray-300 px-4 py-2 text-left">Duration</th>
+                <th className="border border-gray-300 px-4 py-2 text-left">שמירה</th>
+                <th className="border border-gray-300 px-4 py-2 text-left">זמן התחלה</th>
+                <th className="border border-gray-300 px-4 py-2 text-left">זמן סיום</th>
+                <th className="border border-gray-300 px-4 py-2 text-left">משך</th>
               </tr>
             </thead>
             <tbody>
               {shiftData.map((shift) => (
                 <tr key={shift.shiftNumber} className="hover:bg-gray-50">
                   <td className="border border-gray-300 px-4 py-2 font-medium">
-                    Shift {shift.shiftNumber}
+                    שמירה {shift.shiftNumber}
                   </td>
                   <td className="border border-gray-300 px-4 py-2">{shift.startTime}</td>
                   <td className="border border-gray-300 px-4 py-2">{shift.endTime}</td>
@@ -158,11 +158,11 @@ const ShiftScheduler = () => {
       const equalShifts = Array(numShifts).fill(perfectShiftDuration);
 
       setResults({
-        totalDuration: `${Math.floor(totalDuration / 60)}h ${totalDuration % 60}m`,
+        totalDuration: `${Math.floor(totalDuration / 60)} שעות ${String(totalDuration % 60)} דקות`,
         canDivideEqually: true,
         strategies: [{
-          name: 'Equal Distribution',
-          description: 'Perfect equal division - all shifts have the same duration',
+          // name: 'חלוקה מושלמת',
+          // description: 'חלוקה מושלמת!',
           shifts: generateShifts(startMins, equalShifts),
           totalTime: equalShifts.reduce((sum, duration) => sum + duration, 0),
           adjustedStartTime: startTime,
@@ -187,12 +187,12 @@ const ShiftScheduler = () => {
       const equalShiftsC = Array(numShifts).fill(equalDurationDown);
 
       setResults({
-        totalDuration: `${Math.floor(totalDuration / 60)}h ${totalDuration % 60}m`,
+        totalDuration: `${Math.floor(totalDuration / 60)} שעות ${String(totalDuration % 60)} דקות`,
         canDivideEqually: false,
         strategies: [
           {
-            name: 'Maximize Shifts Duration',
-            description: `Use maximum equal time (${Math.floor(maxShiftDuration / 60)}h ${maxShiftDuration % 60}m), distribute ${remainder} min remainder`,
+            name: 'מיקסום זמן שמירה',
+            description: `שימוש בזמן שווה מקסימלי (${Math.floor(maxShiftDuration / 60)} שעות ${String(maxShiftDuration % 60)} דקות), לחלק את שארית הדקות (${remainder})`,
             hasSlider: true,
             baseShifts: Array(numShifts).fill(maxShiftDuration),
             remainder: remainder,
@@ -200,16 +200,16 @@ const ShiftScheduler = () => {
             adjustedEndTime: endTime
           },
           {
-            name: 'Add Time (Earlier Start)',
-            description: `Add ${timeToAdd} minutes by starting earlier to make all shifts equal`,
+            name: 'להתחיל קודם (להוסיף זמן)',
+            description: `להוסיף ${timeToAdd} דקות ולהתחיל מוקדם יותר כדי להשוות את זמן השמירות`,
             shifts: generateShifts(startMins - timeToAdd, equalShiftsB),
             totalTime: equalShiftsB.reduce((sum, duration) => sum + duration, 0),
             adjustedStartTime: adjustedStartTimeB,
             adjustedEndTime: endTime
           },
           {
-            name: 'Subtract Time (Later Start)',
-            description: `Remove ${timeToSubtract} minutes by starting later to make all shifts equal`,
+            name: 'להתחיל אחרי (לחסר זמן)',
+            description: `חיסור ${timeToSubtract} דקות ולהתחיל יותר מאוחר כדי להשוות את זמן השמירות`,
             shifts: generateShifts(startMins + timeToSubtract, equalShiftsC),
             totalTime: equalShiftsC.reduce((sum, duration) => sum + duration, 0),
             adjustedStartTime: adjustedStartTimeC,
@@ -221,7 +221,7 @@ const ShiftScheduler = () => {
   };
 
   const formatTotalTime = (minutes) => {
-    return `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
+    return `${Math.floor(minutes / 60)} שעות ${String(minutes % 60)} דקות`;
   };
 
   return (
@@ -229,13 +229,13 @@ const ShiftScheduler = () => {
       <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
         <h1 className="text-3xl font-bold text-gray-800 mb-6 flex items-center gap-2">
           <Clock className="text-blue-600" />
-          Shift Scheduler
+          מנהל שמירות
         </h1>
 
         <div className="grid md:grid-cols-3 gap-4 mb-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Start Time
+              זמן התחלה
             </label>
             <input
               type="time"
@@ -248,7 +248,7 @@ const ShiftScheduler = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              End Time
+              זמן סיום
             </label>
             <input
               type="time"
@@ -262,12 +262,12 @@ const ShiftScheduler = () => {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
               <Users size={16} />
-              Number of Shifts
+              מספר שמירות
             </label>
             <input
               type="number"
               min="2"
-              max="10"
+              max="12"
               value={numShifts}
               onChange={(e) => setNumShifts(parseInt(e.target.value))}
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -280,13 +280,13 @@ const ShiftScheduler = () => {
           className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors"
         >
           <Calculator size={20} />
-          Calculate Shifts
+          חישוב השמירות
         </button>
 
         {timeToMinutes(endTime) <= timeToMinutes(startTime) && (
           <div className="mt-4 p-3 bg-blue-100 border border-blue-300 rounded-lg">
             <p className="text-blue-800 text-sm">
-              📅 Overnight shift detected: {startTime} to {endTime} next day
+              📅 זוהתה שמירת לילה: מ{startTime} עד {endTime} למחרת
             </p>
           </div>
         )}
@@ -296,19 +296,19 @@ const ShiftScheduler = () => {
         <div className="space-y-6">
           <div className="bg-white rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              Total Duration: {results.totalDuration}
+              סך זמן השמירות: {results.totalDuration}
             </h2>
             {results.canDivideEqually && (
               <div className="p-3 bg-green-100 border border-green-300 rounded-lg">
                 <p className="text-green-800 text-sm">
-                  ✅ Perfect! Can divide equally into {numShifts} shifts of 5-minute intervals
+                  ✅ מושלם! ניתן לחלק ל {numShifts} שמירות עגולות
                 </p>
               </div>
             )}
             {!results.canDivideEqually && (
               <div className="p-3 bg-yellow-100 border border-yellow-300 rounded-lg">
                 <p className="text-yellow-800 text-sm">
-                  ⚠️ Cannot divide equally. Here are 3 alternatives:
+                  ⚠️ אי אפשר לחלק לשמירות עגולות, הנה 3 אלטרנטיבות:
                 </p>
               </div>
             )}
@@ -319,20 +319,18 @@ const ShiftScheduler = () => {
               <div className="flex justify-between items-center mb-4">
                 <div>
                   <h3 className="text-xl font-semibold text-gray-800">
-                    {results.canDivideEqually ? strategy.name : `Option ${String.fromCharCode(65 + index)}: ${strategy.name}`}
+                    {results.canDivideEqually ? strategy.name : `אפשרות ${index == 0 ? "א" : (index == 1 ? "ב" : "ג")}: ${strategy.name}`}
                   </h3>
                   <p className="text-gray-600 text-sm">{strategy.description}</p>
                   {strategy.adjustedStartTime && strategy.adjustedStartTime !== startTime && (
                     <p className="text-blue-600 text-sm mt-1">
-                      📅 Adjusted schedule: {strategy.adjustedStartTime} - {strategy.adjustedEndTime}
+                      📅 לוז חדש: {strategy.adjustedStartTime} - {strategy.adjustedEndTime}
                     </p>
                   )}
                 </div>
                 <div className="text-right">
-                  <p className="text-sm text-gray-500">Total Scheduled Time</p>
-                  <p className="text-lg font-semibold text-blue-600">
-                    {strategy.hasSlider ? formatTotalTime(strategy.baseShifts.reduce((sum, d) => sum + d, 0) + strategy.remainder) : formatTotalTime(strategy.totalTime)}
-                  </p>
+                  <p className="text-sm text-gray-500">סך זמן השמירות: {strategy.hasSlider ? formatTotalTime(strategy.baseShifts.reduce((sum, d) => sum + d, 0) + strategy.remainder) : formatTotalTime(strategy.totalTime)}</p>
+
                 </div>
               </div>
 
@@ -343,17 +341,17 @@ const ShiftScheduler = () => {
                   <table className="w-full border-collapse border border-gray-300">
                     <thead>
                       <tr className="bg-gray-100">
-                        <th className="border border-gray-300 px-4 py-2 text-left">Shift #</th>
-                        <th className="border border-gray-300 px-4 py-2 text-left">Start Time</th>
-                        <th className="border border-gray-300 px-4 py-2 text-left">End Time</th>
-                        <th className="border border-gray-300 px-4 py-2 text-left">Duration</th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">שמירה</th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">זמן התחלה</th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">זמן סיום</th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">משך</th>
                       </tr>
                     </thead>
                     <tbody>
                       {strategy.shifts.map((shift) => (
                         <tr key={shift.shiftNumber} className="hover:bg-gray-50">
                           <td className="border border-gray-300 px-4 py-2 font-medium">
-                            Shift {shift.shiftNumber}
+                            שמירה {shift.shiftNumber}
                           </td>
                           <td className="border border-gray-300 px-4 py-2">{shift.startTime}</td>
                           <td className="border border-gray-300 px-4 py-2">{shift.endTime}</td>
