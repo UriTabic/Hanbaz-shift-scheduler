@@ -3,9 +3,9 @@ import { Clock, Users, Calculator } from 'lucide-react';
 import './App.css';
 
 const ShiftScheduler = () => {
-  const [startTime, setStartTime] = useState('09:00');
-  const [endTime, setEndTime] = useState('17:00');
-  const [numShifts, setNumShifts] = useState(2);
+  const [startTime, setStartTime] = useState('22:00');
+  const [endTime, setEndTime] = useState('06:00');
+  const [numShifts, setNumShifts] = useState(9);
   const [results, setResults] = useState(null);
 
   // Convert time string to minutes from midnight
