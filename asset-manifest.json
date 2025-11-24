@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/Hanbaz-shift-scheduler/static/css/main.e6c13ad2.css",
-    "main.js": "/Hanbaz-shift-scheduler/static/js/main.95cf9c13.js",
+    "main.js": "/Hanbaz-shift-scheduler/static/js/main.72789cd0.js",
     "static/js/453.9291f5e4.chunk.js": "/Hanbaz-shift-scheduler/static/js/453.9291f5e4.chunk.js",
     "index.html": "/Hanbaz-shift-scheduler/index.html",
     "main.e6c13ad2.css.map": "/Hanbaz-shift-scheduler/static/css/main.e6c13ad2.css.map",
-    "main.95cf9c13.js.map": "/Hanbaz-shift-scheduler/static/js/main.95cf9c13.js.map",
+    "main.72789cd0.js.map": "/Hanbaz-shift-scheduler/static/js/main.72789cd0.js.map",
     "453.9291f5e4.chunk.js.map": "/Hanbaz-shift-scheduler/static/js/453.9291f5e4.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.95cf9c13.js"
+    "static/js/main.72789cd0.js"
   ]
 }
