@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, Users, Calculator, Copy, Plus, ToggleLeft, ToggleRight, Save, Trash2 } from 'lucide-react';
+import { Clock, Users, Calculator, Copy, Plus, ToggleLeft, ToggleRight, Save, Trash2, UserPlus } from 'lucide-react';
 
 const ShiftScheduler = () => {
   const [startTime, setStartTime] = useState('22:00');
@@ -11,6 +11,7 @@ const ShiftScheduler = () => {
   const [nameInput, setNameInput] = useState('');
   const [nameList, setNameList] = useState([]);
   const [copySuccess, setCopySuccess] = useState('');
+  const [pairingMode, setPairingMode] = useState(false);
 
   useEffect(() => {
     try {
@@ -26,6 +27,10 @@ const ShiftScheduler = () => {
   const getEffectiveNumShifts = () => {
     if (autoCalculateShifts) {
       const presentCount = nameList.filter(p => p.present).length;
+      if (pairingMode) {
+        // In pairing mode, number of shifts = number of pairs (rounded up for odd numbers)
+        return presentCount > 0 ? Math.ceil(presentCount / 2) : 1;
+      }
       return presentCount > 0 ? presentCount : 2;
     }
     return numShifts;
@@ -103,6 +108,21 @@ const ShiftScheduler = () => {
       const j = Math.floor(Math.random() * (i + 1));
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
+
+    if (pairingMode) {
+      // Create pairs of names
+      const pairs = [];
+      for (let i = 0; i < shuffled.length; i += 2) {
+        if (i + 1 < shuffled.length) {
+          pairs.push(`${shuffled[i]} + ${shuffled[i + 1]}`);
+        } else {
+          // If odd number, last person is alone
+          pairs.push(shuffled[i]);
+        }
+      }
+      return pairs;
+    }
+
     return shuffled;
   };
 
@@ -604,6 +624,41 @@ const ShiftScheduler = () => {
             >
               {simplifiedView ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
               {simplifiedView ? 'פעיל' : 'כבוי'}
+            </button>
+          </div>
+          <div>
+            <label style={{
+              display: 'block',
+              fontSize: '0.875rem',
+              fontWeight: '500',
+              color: '#374151',
+              marginBottom: '0.5rem'
+            }}>
+              שמירה בזוגות
+            </label>
+            <button
+              onClick={() => setPairingMode(!pairingMode)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                padding: '0.5rem 0.75rem',
+                borderRadius: '0.5rem',
+                width: '100%',
+                justifyContent: 'center',
+                backgroundColor: pairingMode ? '#dbeafe' : '#f3f4f6',
+                color: pairingMode ? '#1e40af' : '#6b7280',
+                border: '1px solid #d1d5db',
+                cursor: 'pointer',
+                fontSize: '0.875rem',
+                fontWeight: '500',
+                transition: 'background-color 0.15s ease-in-out'
+              }}
+              onMouseOver={(e) => { e.currentTarget.style.backgroundColor = pairingMode ? '#bfdbfe' : '#e5e7eb'; }}
+              onMouseOut={(e) => { e.currentTarget.style.backgroundColor = pairingMode ? '#dbeafe' : '#f3f4f6'; }}
+            >
+              {pairingMode ? <UserPlus size={20} /> : <Users size={20} />}
+              {pairingMode ? 'פעיל' : 'כבוי'}
             </button>
           </div>
         </div>
